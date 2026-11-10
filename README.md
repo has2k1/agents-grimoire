@@ -1,85 +1,134 @@
 # agents-grimoire
 
-Skills for running a **living AGENTS.md documentation system** — the practice
-where a repository carries its own agent-facing documentation, keeps it true by
-updating it in the same commit as the code it describes, and grows it from real
-incidents rather than up-front speculation.
-
-A *grimoire* is a practitioner's working book of hard-won knowledge, passed
-between practitioners. That is what a good `AGENTS.md` tree is: not a README
-for humans browsing, but the accumulated, maintained knowledge an agent needs
-to work in the repo without re-learning every lesson the hard way.
+Two skills for maintaining useful agent instructions alongside a repository's
+code. Bootstrap creates or extends verified instructions. Audit checks whether
+existing instructions remain accurate, cover the necessary rules, and still help
+future work.
 
 ## The system
 
-Three ideas carry the weight:
+Update affected instructions in the same commit when a change invalidates a
+documented claim or introduces a necessary instruction. Leave accurate
+instructions unchanged. Independent documentation corrections,
+bootstrap work, and audit records are valid changes too.
 
-- **Docs ship with code.** A change that contradicts a documented fact updates
-  that file in the *same commit*. Doc-only commits are a smell — they mean the
-  doc fell out of the change that made it stale. This is the discipline that
-  keeps the files true instead of decaying the way READMEs do.
-- **A fact lives at one altitude.** The root file orients, a hub file holds
-  cross-cutting rules, and per-module leaf files hold module specifics. Nothing
-  is repeated across tiers; the tiers link to each other. The tree shape is
-  also an attention budget — an agent working in a module gets that module's
-  file injected into context, not the whole tree.
-- **Traps are recorded only while they can still bite.** When a bug's fix — or
-  a later refactor — removes the condition that made it possible, the trap
-  entry is deleted, not annotated. The file describes the code as it *is*; the
-  history of the trap lives in git. The ratchet clicks both directions.
+Preserve established project policy. When implementation conflicts with a
+rule, establish whether the task authorises changing that rule before revising
+it. Record architectural decisions when they constrain future work and their
+reason is supported by a recorded explanation or the decision-maker's
+confirmation. Bootstrap preserves existing explanations without
+reconstructing intent from Git history.
+
+Place guidance at the nearest useful scope. Use a root file for project-wide
+instructions, optional source-root or package files (hubs) for shared rules,
+and local module files (leaves) for distinct module guidance. Keep one
+authoritative explanation and use links or short scoped reminders where needed.
+Create files only when their content justifies them.
+
+Retain warnings while they prevent a concrete failure or plausible regression.
+Remove obsolete or shallow warnings after refactoring; recast a useful warning
+as a guardrail when bypassing an abstraction could reintroduce the problem.
+Keep applicable versions, verification dates, platforms, and measurement
+conditions alongside the claims they limit.
 
 ## The skills
 
-| Skill | Cadence | What it does |
-|---|---|---|
-| **`agents-md-bootstrap`** | one-shot | Sets up the three-tier system in a repo that lacks one. Writes only content verifiable from the current code — never invented rationale — and seeds the maintenance contract into the root file so the system is self-sustaining from day one. |
-| **`agents-md-audit`** | periodic | Checks the system is still telling the truth: drift between docs and code, the same-commit discipline (via git), whether recent bug fixes earned trap entries and old traps are still reachable, and form. Reports, and drafts fixes and trap entries for human confirmation. |
+| Skill | Use | Result |
+| --- | --- | --- |
+| [agents-md-bootstrap](skills/agents-md-bootstrap/SKILL.md) | Set up instructions, add guidance, or repeat bootstrap after changes | Merge verified content while preserving policy, explanations, and routing; identify uncertain claims for review. |
+| [agents-md-audit](skills/agents-md-audit/SKILL.md) | Check instructions after changes or periodically | Report evidenced defects, unverified checks, and proposed corrections; prepare a self-contained checkpoint message. |
 
-## Layout
+## Installation
 
-```
-agents-grimoire/
-├── AGENTS.md                      — agent rules for working in this repo
-├── README.md                      — this file
-└── skills/
-    ├── agents-md-bootstrap/
-    │   └── SKILL.md
-    └── agents-md-audit/
-        └── SKILL.md
-```
-
-## Installing
-
-The skills live at <https://github.com/has2k1/agents-grimoire>. Install them
-with either skill manager:
+Use a Node.js version supported by the [skills CLI](https://github.com/vercel-labs/skills).
+From a checkout of this repository, install both skills for your user account:
 
 ```sh
-uvx skillmd add has2k1/agents-grimoire
+npx skills add . --global
 ```
+
+Select the intended agents in the installer. To install into a particular
+project instead, run this from that project and provide the checkout path:
 
 ```sh
-npx skills add has2k1/agents-grimoire
+npx skills add /path/to/agents-grimoire
 ```
 
-Both pull the skills from the repo and place them where your agent harness
-reads them, so they track the repo as it evolves.
+Inspect the available skills without installing them:
 
-## Using them
+```sh
+npx skills add /path/to/agents-grimoire --list
+```
 
-Bootstrap a repo that has no agent docs:
+After updating a local checkout, rerun the installation command to refresh its
+installed copies. For supported remote sources, use the CLI's `check` and
+`update` commands. Installation does not establish a live link to the author's
+working checkout. See the [CLI reference](https://github.com/vercel-labs/skills/blob/main/docs/commands.md)
+for source formats, agent selection, and update options.
 
-> "Set up an AGENTS.md system in this repo."
+## Usage
 
-Then let the maintenance contract do its work — agents that read the root file
-pick up the reflex to keep the docs in the same commit as their changes.
+Start or extend the instruction system:
 
-Audit periodically (monthly, or before a release):
+> Use agents-md-bootstrap to set up agent instructions in this repository.
+> Preserve existing rules and create only useful scopes.
 
-> "Are the AGENTS.md files still up to date?"
+Audit it after a refactor, dependency change, or a period of development:
 
-The audit reports drift and discipline, and proposes trap entries for the bug
-fixes that earned them.
+> Use agents-md-audit to check these instructions against the current code.
 
-## License
+The audit reads and reports by default. Request corrections or checkpoint
+creation explicitly when you want those writes; existing authorisation still
+applies.
 
-MIT — see [LICENSE](LICENSE).
+Verify which instruction files your agent actually reads. Discovery depends
+on the harness, launch directory, overrides, configuration, and context limits.
+Use explicit file reads when automatic loading is unverified. Instruction
+files communicate the maintenance expectation; following it still requires
+verification and judgement.
+
+## Audit checkpoints
+
+A checkpoint stores the authoritative audit report in an empty,
+single-parent Git commit with the title `chore: record agent documentation
+audit`. Its parent is the audited revision: the committed snapshot the
+report examined. The message contains `##` sections for coverage, unverified
+checks, new findings, carried findings, and closed findings, followed by
+structured trailers. It remains interpretable from repository history alone.
+
+A completed audit has finished its declared work and stated its verification
+limits. It can still report known defects or unavailable checks. A clean result
+means no defect was demonstrated within the checks performed. An unfinished or
+interrupted audit is partial.
+
+Use an earlier validated, completed checkpoint as the baseline for choosing a
+later audit's history window. Limit it to its demonstrated scope and coverage.
+A partial or narrower audit leaves earlier baselines in place for work it did
+not cover. Select the baseline using the audit skill's trailer and first-parent
+history checks. Revalidate after history rewriting; create durable checkpoints
+after integration when feature branches are squashed.
+
+Collect findings separately from choosing the baseline. Read relevant partial
+and differently scoped reports too, even when they cannot supply that baseline.
+Preserve finding IDs and repeat unresolved findings with their evidence. Honour
+verified resolutions; record each closure once and omit it from later reports.
+
+Request checkpoint creation after auditing a committed snapshot:
+
+> Record this audit as an empty Git checkpoint with the complete report in
+> its message.
+
+Use the [audit skill](skills/agents-md-audit/SKILL.md) for the message format,
+selection rules, and write verification. Checkpoints do not require an
+external tracker, a separate checkpoint file, or a mutable latest pointer.
+
+## Development
+
+Keep both skills and the repository rules in agreement when changing their
+behaviour. Validate realistic outcomes using the [evaluation protocol](evals/README.md).
+Format checks cannot establish that a prompt preserves policy or detects
+actual drift.
+
+## Licence
+
+MIT. See [LICENSE](LICENSE).
