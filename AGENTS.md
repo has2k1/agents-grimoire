@@ -56,16 +56,14 @@ single-parent Git commit. Use the title
 `chore: record agent documentation audit` and `##` report headings. Preserve
 stable finding IDs across New findings, Carried findings, and Closed findings.
 Repeat unresolved evidence, record closures once, and use `None` for empty
-sections. Reconcile findings from relevant partial and differently scoped
-records even when those records cannot advance the coverage baseline. Keep the
-record interpretable from Git alone. Choose the history baseline and collect
-earlier findings as separate decisions.
+sections. Keep the record interpretable from Git alone. Record only completed
+repository-wide audits as checkpoints; an interrupted, unfinished, or directory
+audit produces a report without one.
 
 Use the audit skill as the canonical source for checkpoint trailers,
-validation, and write commands. Use an earlier validated, completed
-checkpoint as the history baseline only for its demonstrated scope and
-coverage. Preserve uncovered baselines after partial or narrower audits;
-revalidate markers after rewritten history. Exclude checkpoint commits from
+validation, and write commands. Use the nearest validated checkpoint as the
+history baseline and take its New and Carried findings as the open findings.
+Revalidate markers after rewritten history. Exclude checkpoint commits from
 counts of commits that change code and instructions together.
 
 ## Skill writing

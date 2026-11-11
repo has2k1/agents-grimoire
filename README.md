@@ -96,22 +96,22 @@ report examined. The message contains `##` sections for coverage, unverified
 checks, new findings, carried findings, and closed findings, followed by
 structured trailers. It remains interpretable from repository history alone.
 
-A completed audit has finished its declared work and stated its verification
-limits. It can still report known defects or unavailable checks. A clean result
-means no defect was demonstrated within the checks performed. An unfinished or
-interrupted audit is partial.
+Only a completed audit becomes a checkpoint. A completed audit has finished its
+declared repository-wide work and stated its verification limits. It can still
+report known defects or unavailable checks. A clean result means no defect was
+demonstrated within the checks performed. An unfinished, interrupted, or
+directory audit produces a report but no checkpoint, so it leaves the baseline
+unchanged.
 
-Use an earlier validated, completed checkpoint as the baseline for choosing a
-later audit's history window. Limit it to its demonstrated scope and coverage.
-A partial or narrower audit leaves earlier baselines in place for work it did
-not cover. Select the baseline using the audit skill's trailer and first-parent
-history checks. Revalidate after history rewriting; create durable checkpoints
-after integration when feature branches are squashed.
+Use the nearest validated checkpoint on the branch as the baseline for a later
+audit. It sets the start of the history window, and its new and carried
+findings are the complete set of open findings. Select the baseline using the
+audit skill's trailer and first-parent history checks. Revalidate after history
+rewriting; create durable checkpoints after integration when feature branches
+are squashed.
 
-Collect findings separately from choosing the baseline. Read relevant partial
-and differently scoped reports too, even when they cannot supply that baseline.
-Preserve finding IDs and repeat unresolved findings with their evidence. Honour
-verified resolutions; record each closure once and omit it from later reports.
+Preserve finding IDs and repeat unresolved findings with their evidence. Record
+each closure once and omit it from later reports.
 
 Request checkpoint creation after auditing a committed snapshot:
 

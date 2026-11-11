@@ -66,10 +66,9 @@ run outputs, and dated evidence outside the shipped skill directories.
 | Limit history or leave instruction loading uncertain | State the coverage or delivery limit without inventing a universal verdict. |
 | Establish a first checkpoint | Verify the committed snapshot and state the initial history boundary; treat bootstrap alone as insufficient. |
 | Advance through three completed checkpoints | Preserve IDs, distinguish new and carried findings, record closures once, and repeat enough open evidence for each record to stand alone. |
-| Complete a partial or narrower-scope audit | Preserve the complete baseline for uncovered work and avoid silently closing unresolved findings. |
-| Introduce findings in partial or narrower audits | Carry their original IDs into the next completed audit covering them; do not use the intervening record as the wider coverage baseline. |
+| Interrupt an audit or limit it to a directory | Produce a report without a checkpoint and leave the baseline unchanged. |
 | Encounter malformed markers or unavailable predecessors | Reject invalid baseline candidates and disclose the resulting history limit. |
-| Replay, rebase, or squash checkpoint history | Revalidate surviving markers against the audited target and history; establish a new checkpoint when coverage cannot be demonstrated. |
+| Replay, rebase, or squash checkpoint history | Revalidate surviving markers against the audited target and history; establish a new checkpoint when no surviving marker validates. |
 | Create a checkpoint with unrelated staged changes | Create a single-parent empty marker while preserving index entries and staged contents. |
 | Configure comment-stripping message cleanup | Preserve the authored `##` headings and report through explicit verbatim cleanup. |
 | Recover a checkpoint from a fresh clone | Read its coverage, limitations, findings, and evidence entirely from Git history. |
@@ -83,7 +82,7 @@ available. Supply the candidate documents and ordinary reading questions,
 without expected answers or prior conclusions.
 
 Ask the reader to explain when to use each skill, what bootstrap preserves and
-may infer, what makes an audit complete, which records supply its baseline and
+may infer, what makes an audit complete, which record supplies its baseline and
 findings, and what permits a write. Require locations supporting each answer
 and flag rules that require reconstruction from scattered passages. Resolve
 material ambiguities and repeat the affected questions.
@@ -108,21 +107,12 @@ third and close the second. Check that the final report contains the remaining
 open evidence and only the latest closures. Read earlier commits to confirm that
 older findings remain recoverable without being copied indefinitely.
 
-Run a separate sequence starting with a completed root checkpoint A. Introduce
-F2 in a partial root checkpoint B, then request a completed root audit C. Repeat
-with B as a completed narrower-scope checkpoint. Require C to use A as its
-coverage baseline and carry B's unresolved F2 with the same ID and source
-checkpoint. Also verify a resolution recorded in B: require C to honour it
-without reopening the finding or repeating its closure. Keep expected findings
-outside the executing agent's input and assess both baseline selection and the
-resulting report.
-
 Include a replay whose tree is unchanged but whose parent or inspected history
 differs. Tree equality establishes file equality, not the validity of an earlier
-history-based conclusion. Test scope, completion status, predecessor ancestry,
-and target identity with separate invalid or limited candidates. Verify the
-baseline decision as well as the Git mechanics; a successful empty commit does
-not by itself validate the audit skill's selection procedure.
+history-based conclusion. Test predecessor ancestry and target identity with
+separate invalid candidates. Verify the baseline decision as well as the Git
+mechanics; a successful empty commit does not by itself validate the audit
+skill's selection procedure.
 
 ## Run record
 

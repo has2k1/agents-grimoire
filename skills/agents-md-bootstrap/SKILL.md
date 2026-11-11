@@ -156,8 +156,8 @@ produce no substantive diff.
 
 Treat the result as candidate documentation. Hand off to
 [agents-md-audit](../agents-md-audit/SKILL.md) to verify it, account for findings
-from existing checkpoints, and establish a valid audit baseline. A checkpoint
-stores an audit report in an empty Git commit; a validated completed checkpoint
-can supply the history boundary for a later audit. Bootstrap alone
-establishes no verified checkpoint. Preserve the repository's existing commit
-and publication workflow.
+from the latest checkpoint, and establish a valid audit baseline. A checkpoint
+stores the report of a completed repository-wide audit in an empty Git commit;
+a validated checkpoint can supply the history boundary for a later audit.
+Bootstrap alone establishes no verified checkpoint. Preserve the repository's
+existing commit and publication workflow.
