@@ -42,8 +42,8 @@ Distinguish what the implementation proves from what the project requires:
 
 | Content | Evidence | Treatment |
 | --- | --- | --- |
-| Commands and behaviour | Current configuration, source, tests, or a reproduced invocation | Record the command's purpose, prerequisites, and verified limits. |
-| Project policy | Existing applicable instructions or an authorised decision | Preserve the requirement; do not infer a replacement from code. |
+| Commands and behaviour | Current configuration, code, tests, or a reproduced invocation | Record the command's purpose, prerequisites, and verified limits. |
+| Project policy | Existing applicable instructions or an authorised decision | Preserve the requirement; do not infer a replacement or a new requirement from code. |
 | Architectural rationale | An explanation already recorded in current source or documentation | Preserve its supported meaning and applicability. |
 | Measurements and workarounds | Evidence with relevant versions, verification dates, platforms, and measurement conditions | Retain those limits while the claim applies. |
 
@@ -56,8 +56,15 @@ verifies.
 Verify each new or revised factual rule before handoff. Check the relevant
 entrypoints, input forms, branches, and existing tests for counterexamples.
 State which APIs or modes the rule applies to. Behaviour in one helper does
-not establish an invariant for every caller. Complete these checks for the
-selected scope before treating the run as finished.
+not establish an invariant for every caller. Treat docstrings, comments, and
+names as claims to check against the code, not as evidence of behaviour. Run
+each example an instruction cites and check its result against every rule in
+that instruction. Complete these checks for the selected scope before treating
+the run as finished.
+
+Write a requirement for future changes, such as files to update together, only
+when existing instructions or an authorised decision state it. Report a
+requirement you think the project needs as a suggestion in the handoff.
 
 Use current sources for bootstrap rationale. Do not mine Git history for
 reasons, reconstruct rejected alternatives, or turn an import pattern into an
@@ -155,10 +162,10 @@ that established constraints remain, additions are supported, links resolve,
 and unchanged sources have not acquired duplicated contracts or empty tiers.
 
 Report the files created and changed, their scopes, constraints preserved,
-possible invariants needing confirmation, commands verified, delivery checks,
-and unresolved claims or conflicts. State any prerequisites that prevented
-verification. A repeat run against unchanged code and instructions should
-produce no substantive diff.
+possible invariants needing confirmation, suggested requirements, commands
+verified, delivery checks, and unresolved claims or conflicts. State any
+prerequisites that prevented verification. A repeat run against unchanged code
+and instructions should produce no substantive diff.
 
 Treat the result as candidate documentation. Hand off to
 [agents-md-audit](../agents-md-audit/SKILL.md) to verify it, account for

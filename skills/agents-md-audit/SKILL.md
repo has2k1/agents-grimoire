@@ -93,6 +93,8 @@ message and Git objects meet all of these conditions:
 Because each predecessor must itself be a checkpoint, check candidates from the
 oldest forward and reuse each result; every commit is then checked once.
 Select the nearest candidate that meets these conditions as the baseline.
+Treat any other candidate as an ordinary commit in the history window: read no
+findings or closures from its message.
 When a predecessor is unavailable or shallow history prevents these checks,
 state the gap. Do not silently replace a known history boundary with the last
 few commits or declare the work a first audit. If no baseline can be
@@ -118,7 +120,8 @@ integration when feature history is squashed.
   instruction missing. Demonstrate the defect, then judge its severity by the
   likely consequence for an agent following the instruction, not by a missing
   symbol alone.
-- Verify important invariants against the implementation and tests. Distinguish
+- Verify important invariants against the implementation and tests, treating
+  docstrings and comments as claims rather than evidence. Distinguish
   descriptions from policy: intentional code can still violate an established
   boundary. Resolve conflicts using the task's authority and recorded decisions;
   do not rewrite policy merely to match code that violates it.
