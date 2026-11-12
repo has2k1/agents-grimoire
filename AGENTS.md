@@ -53,13 +53,13 @@ complete report and proposed corrections. Apply changes or create a checkpoint
 when the request authorises that write phase; recognise existing authorisation.
 
 Store the authoritative checkpoint report in the message of an empty,
-single-parent Git commit. Use the title
-`chore: record agent documentation audit` and `##` report headings. Preserve
-stable finding IDs across New findings, Carried findings, and Closed findings.
-Repeat unresolved evidence, record closures once, and use `None` for empty
-sections. Keep the record interpretable from Git alone. Record only completed
-audits of the whole repository as checkpoints; an interrupted or unfinished
-audit produces a report without one.
+single-parent Git commit. Use `##` report headings and the title
+`chore: record agent documentation audit`. Preserve stable finding IDs and the
+checkpoint that first recorded each finding across New findings, Carried
+findings, and Closed findings. Repeat unresolved evidence, record closures once, and use
+`None` for empty sections. Keep the record interpretable from Git alone. Record
+only completed audits of the whole repository as checkpoints; an interrupted or
+unfinished audit produces a report without one.
 
 Use the audit skill as the canonical source for checkpoint trailers,
 validation, and write commands. Use the nearest checkpoint as the baseline: it

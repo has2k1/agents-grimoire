@@ -42,10 +42,10 @@ run outputs, and dated evidence outside the shipped skill directories.
    equivalent snapshots. Fix the task, correctness checks, and runner settings
    before either run. Report correctness, policy preservation, unnecessary
    documentation edits, and investigation effort without assuming improvement.
-7. Record each result as passed, failed, or unverified, with the actual evidence.
-   Rerun affected cases after a prompt correction; retain successful results
-   when neither their inputs nor the relevant rule changed. Record which final
-   skill bytes each result exercises and why broader cases were omitted.
+7. Record each result as passed, failed, or unverified, with the actual
+   evidence. Rerun affected cases after a prompt correction; retain successful
+   results when neither their inputs nor the relevant rule changed. Record which
+   final skill bytes each result exercises and why broader cases were omitted.
 
 ## Cases
 

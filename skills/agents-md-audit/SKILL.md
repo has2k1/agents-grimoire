@@ -28,10 +28,10 @@ Record coverage as the files, claims, history, and checks actually examined.
    reads. Check relevant loading paths and size budgets against the available
    configuration or current harness documentation. Mark unknown delivery as
    unverified; filenames and directory placement alone do not prove loading.
-3. State files and claims to verify, any sampling, command prerequisites, and the
-   available history. Limit the verdict when the repository is dirty, history is
-   shallow or unavailable, or checks cannot run. Audit local changes separately
-   from a committed snapshot; do not attribute them to its SHA.
+3. State files and claims to verify, any sampling, command prerequisites, and
+   the available history. Limit the verdict when the repository is dirty,
+   history is shallow or unavailable, or checks cannot run. Audit local changes
+   separately from a committed snapshot; do not attribute them to its SHA.
 
 ## History and earlier findings
 
@@ -58,7 +58,6 @@ inspects changes up to the audited revision. Its New and Carried findings are
 the complete set of open earlier findings. An audit that produces no checkpoint
 leaves the baseline unchanged.
 
-Use the **Report** and **Checkpoint message** sections to finish the deliverable.
 Bootstrap output remains candidate documentation until verified and cannot by
 itself supply a baseline.
 
@@ -91,6 +90,8 @@ message and Git objects meet all of these conditions:
   findings or Carried findings in the named checkpoint appears under Carried
   findings or Closed findings.
 
+Because each predecessor must itself be a checkpoint, check candidates from the
+oldest forward and reuse each result; every commit is then checked once.
 Select the nearest candidate that meets these conditions as the baseline.
 When a predecessor is unavailable or shallow history prevents these checks,
 state the gap. Do not silently replace a known history boundary with the last
@@ -186,28 +187,27 @@ outcomes, relevant environment and versions, and unresolved checks. Keep the
 report interpretable from the repository itself, using repository-relative
 paths and Git revisions as evidence.
 
-Verify the status of each open finding from the baseline against the checks.
-Preserve its ID and source checkpoint, the checkpoint that first recorded it;
-retain unresolved findings and disclose evidence that cannot be validated.
-Account for every open finding before finalising the report.
+Recheck every open finding from the baseline and place it under Carried
+findings or Closed findings before finalising the report.
 
 Separate findings into these sections; write `None` when one is empty:
 
 - Record new findings with fresh stable IDs, affected instructions, evidence,
   consequences, and required corrections.
-- Carry every unresolved finding from the baseline with its ID, source
-  checkpoint, and a complete account of its evidence, consequence, and required
-  correction. Move unresolved new findings here at the next checkpoint; retain
-  findings whose resolution cannot be verified.
+- Carry every unresolved finding from the baseline, including those it listed
+  as new, with its ID, its source checkpoint (the checkpoint that first recorded
+  it), and a complete account of its evidence, consequence, and required
+  correction. Keep a finding open when its resolution cannot be verified, and
+  disclose evidence that cannot be validated.
 - Close findings with the verified resolution or supersession and supporting
   evidence. Record each closure once, then omit it from later reports. Keep its
-  history in the earlier checkpoint rather than growing an archive in each report.
+  history in the earlier checkpoint rather than growing an archive in each
+  report.
 
 Allocate IDs without reusing retired ones; for example, use an audit-specific
 UTC timestamp plus a counter and retain that ID thereafter. State in the report
 whether the audit completed; an interrupted or unfinished audit ends with the
-report. Claim a clean result only within the checks that
-demonstrate it.
+report. Claim a clean result only within the checks that demonstrate it.
 
 ## Checkpoint message
 
@@ -267,9 +267,9 @@ content from claims about the committed snapshot and record any resulting
 coverage limit. Refuse to record a checkpoint for an observed dirty state as
 though the parent contained it.
 
-Save the message in a temporary file outside the checkout. Record HEAD, the index
-tree, and existing working changes before the write. Keep an unrelated staged
-change staged by using the explicit empty-commit mode:
+Save the message in a temporary file outside the checkout. Record HEAD, the
+index tree, and existing working changes before the write. Keep an unrelated
+staged change staged by using the explicit empty-commit mode:
 
 ```sh
 git commit --allow-empty --only --cleanup=verbatim --file <temporary-message-file>

@@ -89,12 +89,17 @@ verification and judgement.
 
 ## Audit checkpoints
 
-A checkpoint stores the authoritative audit report in an empty,
-single-parent Git commit with the title `chore: record agent documentation
-audit`. Its parent is the audited revision: the committed snapshot the
-report examined. The message contains `##` sections for coverage, unverified
-checks, new findings, carried findings, and closed findings, followed by
-structured trailers. It remains interpretable from repository history alone.
+A checkpoint stores the authoritative audit report in an empty, single-parent
+Git commit titled:
+
+```text
+chore: record agent documentation audit
+```
+
+Its parent is the audited revision: the committed snapshot the report examined.
+The message contains `##` sections for coverage, unverified checks, new
+findings, carried findings, and closed findings, followed by structured
+trailers. It remains interpretable from repository history alone.
 
 Only a completed audit becomes a checkpoint. A completed audit has finished its
 declared checks of the whole repository and stated its verification limits. It
@@ -110,8 +115,9 @@ audit skill defines the conditions a commit must meet to be a checkpoint.
 Rewriting history can break them, so check them again afterwards; create durable
 checkpoints after integration when feature branches are squashed.
 
-Preserve finding IDs and repeat unresolved findings with their evidence. Record
-each closure once and omit it from later reports.
+Preserve each finding's ID and the checkpoint that first recorded it, and repeat
+unresolved findings with their evidence. Record each closure once and omit it
+from later reports.
 
 Request checkpoint creation after auditing a committed snapshot:
 

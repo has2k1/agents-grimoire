@@ -10,10 +10,10 @@ behaviour, and non-obvious constraints supported by the repository. Preserve
 established project policy and recorded rationale. Keep uncertain claims out
 of the generated instructions and identify them in the handoff.
 
-Treat the instruction system as the repository's applicable instruction files
-and the links, imports, and overrides that determine when they are read.
-Extend an existing AGENTS.md or CLAUDE.md arrangement without replacing its
-routing merely to adopt a new layout.
+The *instruction system* is the repository's applicable instruction files
+together with the links, imports, and overrides that determine when they are
+read. Extend an existing AGENTS.md or CLAUDE.md arrangement without replacing
+its routing merely to adopt a new layout.
 
 ## Instruction survey
 
@@ -23,10 +23,11 @@ Before writing, inspect the repository state and instruction routing:
   within the requested scope, plus ancestor instructions that apply to it.
 - Identify which sources own each rule, where they apply, and any conflicts.
   Check ignored and untracked files as well as Git's tracked inventory.
-- Select the path that matches the request: create useful instructions for
-  initial setup, retain unrelated sections and add the requested coverage for
-  an extension, or correct only inaccurate claims and necessary omissions for
-  a repeat run. Leave an unchanged system substantively unchanged.
+- Select the path that matches the request:
+  - For initial setup, create useful instructions.
+  - For an extension, retain unrelated sections and add the requested coverage.
+  - For a repeat run, correct only inaccurate claims and necessary omissions.
+    Leave an unchanged system substantively unchanged.
 - Map the natural module boundaries and read enough code to establish each
   proposed instruction. A directory alone does not justify a leaf file.
 
@@ -49,8 +50,8 @@ Distinguish what the implementation proves from what the project requires:
 Find commands in the actual project configuration or documentation. Run
 appropriate, bounded checks when feasible. Record an unavailable prerequisite
 or a failing implementation separately from a defective invocation; neither
-automatically makes the command stale. Include only the verification that a
-command actually provides.
+automatically makes the command stale. Describe only what the command actually
+verifies.
 
 Verify each new or revised factual rule before handoff. Check the relevant
 entrypoints, input forms, branches, and existing tests for counterexamples.
@@ -62,8 +63,7 @@ Use current sources for bootstrap rationale. Do not mine Git history for
 reasons, reconstruct rejected alternatives, or turn an import pattern into an
 invented architectural intention. Preserve existing explanations supported by
 their recorded source; leave new rationale to an evidenced decision during
-later work. Prefer a short instruction that affects a future change over a
-catalogue of symbols or facts obvious from a filename.
+later work.
 
 ## Placement and delivery
 
@@ -99,9 +99,11 @@ to an explicit request.
 ## Writing
 
 Merge useful sections into existing files rather than replacing them with a
-standard outline. For a new root, include a brief project description, verified
-commands with their purpose and prerequisites, established project rules, the
-maintenance contract below, and an index of instructions that actually exist.
+standard outline. Prefer a short instruction that affects a future change over a
+catalogue of symbols or facts obvious from a filename. For a new root, include a
+brief project description, verified commands with their purpose and
+prerequisites, established project rules, the maintenance contract below, and an
+index of instructions that actually exist.
 
 For a new hub or leaf, state its responsibility, commands and behaviour, and
 non-obvious constraints; link to the relevant shared rules and neighbouring
@@ -126,8 +128,10 @@ applicable policy and resolving contradictions; avoid duplicate contracts.
 >
 > Keep the canonical explanation at the nearest shared scope. Link to it from
 > other files, using short scoped reminders where they help readers discover
-> an obligation. Retain relevant versions, verification dates, platforms, and
-> measurement conditions; remove these limits when they cease to apply.
+> an obligation.
+>
+> Retain relevant versions, verification dates, platforms, and measurement
+> conditions; remove these limits when they cease to apply.
 >
 > Record an accepted architectural decision when future changes need a
 > non-obvious constraint or its reason. State the rule, its evidenced reason,
@@ -139,9 +143,10 @@ applicable policy and resolving contradictions; avoid duplicate contracts.
 > Retain a warning about a failure (a trap entry) only when a concrete failure
 > or regression path still warrants guidance on diagnosis or prevention. Record
 > the symptom, mechanism, and recognition or avoidance. Remove obsolete or
-> shallow detail and lessons adequately covered by enforcement or tests. When bypassing an
-> abstraction can reintroduce the failure, keep a concise guardrail and its
-> reason. Keep historical incident accounts in Git rather than in these files.
+> shallow detail and lessons adequately covered by enforcement or tests. When
+> bypassing an abstraction can reintroduce the failure, keep a concise guardrail
+> and its reason. Keep historical incident accounts in Git rather than in these
+> files.
 
 ## Handoff
 
@@ -156,9 +161,9 @@ verification. A repeat run against unchanged code and instructions should
 produce no substantive diff.
 
 Treat the result as candidate documentation. Hand off to
-[agents-md-audit](../agents-md-audit/SKILL.md) to verify it, account for findings
-from the latest checkpoint, and establish a valid audit baseline. A checkpoint
-stores the report of a completed repository audit in an empty Git commit;
-a checkpoint can supply the history boundary for a later audit.
-Bootstrap alone establishes no verified checkpoint. Preserve the repository's
-existing commit and publication workflow.
+[agents-md-audit](../agents-md-audit/SKILL.md) to verify it, account for
+findings from the latest checkpoint, and establish a valid audit baseline. A
+checkpoint stores the report of a completed repository audit in an empty Git
+commit and can supply the history boundary for a later audit. Bootstrap alone
+establishes no verified checkpoint. Preserve the repository's existing commit
+and publication workflow.
