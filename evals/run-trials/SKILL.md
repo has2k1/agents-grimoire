@@ -24,13 +24,19 @@ Each executor meets the skills as a user's agent would:
   `codex exec`, started in the case's fixture.
 - Give it the case's `request` text from the run manifest, verbatim, as its
   whole prompt.
-- Limit it to its fixture, the pinned skills directory, and its output
-  directory. Keep `evals/`, the run directory, and your own notes out of its
-  reach.
+- Limit it to its fixture, the pinned skills directory, its output
+  directory, and the temporary directories its tools need. Keep `evals/`, the
+  run directory, and your own notes out of its reach.
+- Start it with the manifest's `environment.executor_env`. Sandboxes commonly
+  hide the user's Git configuration; the generated configuration carries the
+  user's ignore rules and nothing else.
 
 When the harness cannot provide a clean context, run the case anyway and
 record the limit. An executor that has seen the expected outcomes cannot
 supply evidence for the skills.
+
+When the harness is Claude Code, read [claude-code.md](claude-code.md) before
+step 1; it constrains where the trial root goes.
 
 ## Steps
 
@@ -74,6 +80,7 @@ supply evidence for the skills.
 
    - the package revision and whether its tree was clean;
    - the pinned skill hashes and ignored instruction files from the manifest;
+   - the executor environment and the excludes-file source from the manifest;
    - the harness name and version, the model where exposed, the isolation
      method, and any instructions or hooks the executors inherited;
    - each case's outcome, with its automatic check counts and manual verdicts;

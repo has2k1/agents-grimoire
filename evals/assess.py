@@ -92,6 +92,9 @@ def resolve(info: JsonObject, label: str) -> str:
 
 # State capture, kept identical to the builders ------------------------------
 
+# The instruction paths whose ignore status the run manifest records.
+IGNORE_PROBES = ["AGENTS.md", "CLAUDE.md", ".agents/", ".claude/"]
+
 
 def sha256_file(path: Path) -> str:
     """Return the SHA-256 hex digest of the file at `path`"""
@@ -327,9 +330,42 @@ def checkpoint_reasons(
     return reasons
 
 
+def check_executor_setup(manifest: JsonObject) -> JsonObject:
+    """
+    Check the Git configuration that executors run with
+
+    It must set only `core.excludesFile`, naming a file in the trial root, and
+    must reproduce the ignore status the manifest records.
+    """
+    trial_root = Path(manifest["trial_root"])
+    environment = manifest["environment"]
+    config = Path(environment["executor_env"]["GIT_CONFIG_GLOBAL"])
+    assert config.is_file(), config
+    settings = subprocess.run(
+        ["git", "config", "--file", str(config), "--list"],
+        env=base_env(),
+        capture_output=True,
+        text=True,
+        check=True,
+    ).stdout.splitlines()
+    assert len(settings) == 1 and settings[0].startswith("core.excludesfile="), settings
+    ignore = Path(settings[0].split("=", 1)[1])
+    assert ignore.is_file() and ignore.is_relative_to(trial_root), ignore
+    ignored = subprocess.run(
+        ["git", "-C", manifest["cases"]["T1"]["fixture"], "check-ignore", "--no-index"]
+        + IGNORE_PROBES,
+        env={**base_env(), "GIT_CONFIG_GLOBAL": str(config)},
+        capture_output=True,
+        text=True,
+        check=False,
+    ).stdout.split()
+    assert ignored == environment["executor_ignored_instruction_paths"], ignored
+    return {"git_config": str(config), "ignored": ignored}
+
+
 def selftest(manifest: JsonObject, expected: JsonObject) -> JsonObject:
-    """Check that each fixture's checkpoint-like commits have the intended status"""
-    out: JsonObject = {}
+    """Check the executor setup and the status of each checkpoint-like commit"""
+    out: JsonObject = {"executor_setup": check_executor_setup(manifest)}
     for case, valid, invalid in [
         ("T1", ["C1", "C2"], []),
         ("T2", ["C1"], ["X"]),

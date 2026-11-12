@@ -7,12 +7,13 @@ every commit SHA. The checkpoint fixtures embed the audit skill's content hash
 and T3 quotes the bootstrap skill's maintenance contract, so their SHAs change
 when those skills change.
 
-The trial root receives the fixtures, an empty output directory per case and
-an empty Git configuration directory. The run directory receives the run
-manifest, the fixture bundles and the authored checkpoint messages. The trial
-root and the pinned skills must lie outside this package, and the run
-directory outside its `evals/` and `skills/` directories, so executors cannot
-reach the expected outcomes. Existing fixtures are never replaced.
+The trial root receives the fixtures, an empty output directory per case, an
+empty Git configuration directory for the build, and the Git configuration
+that executors run with. The run directory receives the run manifest, the
+fixture bundles and the authored checkpoint messages. The trial root and the
+pinned skills must lie outside this package, and the run directory outside its
+`evals/` and `skills/` directories, so executors cannot reach the expected
+outcomes. Existing fixtures are never replaced.
 
 Run from the package root, for example::
 
@@ -1088,19 +1089,78 @@ def snapshot(repo: Path, env: dict[str, str]) -> JsonObject:
     }
 
 
-def executor_ignored_names(repo: Path) -> list[str]:
+def user_excludes_file() -> Path | None:
     """
-    Return instruction paths that the user's own Git ignore rules match
+    Locate the user's Git excludes file as Git itself resolves it
 
-    Executors run with the user's Git configuration rather than the isolated
-    build environment. Instruction files they create under a matching rule
-    appear as ignored rather than untracked, which affects how their output
-    must be inspected.
+    `core.excludesFile` from the global configuration takes precedence;
+    otherwise Git reads `$XDG_CONFIG_HOME/git/ignore`, defaulting to
+    `~/.config/git/ignore`. Return `None` when the resolved file does not exist.
+    """
+    result = subprocess.run(
+        ["git", "config", "--global", "--get", "core.excludesFile"],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    configured = result.stdout.strip()
+    if configured:
+        path = Path(configured).expanduser()
+    else:
+        xdg = os.environ.get("XDG_CONFIG_HOME") or str(Path.home() / ".config")
+        path = Path(xdg) / "git/ignore"
+    return path if path.is_file() else None
+
+
+def write_executor_git(
+    trial_root: Path, env: dict[str, str]
+) -> tuple[Path, Path | None]:
+    """
+    Write the Git configuration that executors run with
+
+    The configuration carries only `core.excludesFile`, pointing at a copy of
+    the user's excludes file, so instruction files the user ignores appear
+    ignored to executors too. Sandboxed harnesses often hide the user's own
+    configuration, and its other settings (credentials, signing keys, pagers)
+    have no bearing on the trials. Fixtures set their own identity locally.
+
+    Returns
+    -------
+    :
+        The configuration path and the copied excludes file's source, or
+        `None` when the user has no excludes file.
+    """
+    directory = trial_root / "executor-git"
+    directory.mkdir(parents=True, exist_ok=True)
+    config = directory / "config"
+    ignore = directory / "ignore"
+    source = user_excludes_file()
+    ignore.write_bytes(source.read_bytes() if source else b"")
+    config.unlink(missing_ok=True)
+    subprocess.run(
+        ["git", "config", "--file", str(config), "core.excludesFile", str(ignore)],
+        env=env,
+        check=True,
+    )
+    return config, source
+
+
+def executor_ignored_names(repo: Path, git_config: Path) -> list[str]:
+    """
+    Return instruction paths that the executors' Git ignore rules match
+
+    Executors run with `git_config`, which carries the user's excludes file.
+    Instruction files they create under a matching rule appear as ignored
+    rather than untracked, which affects how their output must be inspected.
     """
     names = ["AGENTS.md", "CLAUDE.md", ".agents/", ".claude/"]
     result = subprocess.run(
         ["git", "-C", str(repo), "check-ignore", "--no-index", *names],
-        env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
+        env={
+            **os.environ,
+            "GIT_OPTIONAL_LOCKS": "0",
+            "GIT_CONFIG_GLOBAL": str(git_config),
+        },
         capture_output=True,
         text=True,
         check=False,
@@ -1127,7 +1187,7 @@ def parse_args() -> argparse.Namespace:
         "--trial-root",
         type=Path,
         required=True,
-        help="directory for fixtures, executor outputs and the empty Git config",
+        help="directory for fixtures, executor outputs and Git configurations",
     )
     parser.add_argument(
         "--skills",
@@ -1166,6 +1226,7 @@ def main() -> None:
     fixtures = args.trial_root / "fixtures"
     outputs = args.trial_root / "outputs"
     messages = args.run_dir / "messages"
+    executor_git, excludes_source = write_executor_git(args.trial_root, env)
 
     builders = {"T1": build_t1, "T2": build_t2, "T3": build_t3, "T4": build_t4}
     built: dict[str, Fixture] = {}
@@ -1215,8 +1276,15 @@ def main() -> None:
                 "Built with GIT_CONFIG_GLOBAL=/dev/null, GIT_CONFIG_NOSYSTEM=1, an empty "
                 "XDG_CONFIG_HOME and an empty template."
             ),
+            "executor_env": {
+                "GIT_CONFIG_GLOBAL": str(executor_git),
+                "GIT_PAGER": "cat",
+            },
+            "executor_excludes_source": str(excludes_source)
+            if excludes_source
+            else None,
             "executor_ignored_instruction_paths": executor_ignored_names(
-                built["T1"].path
+                built["T1"].path, executor_git
             ),
         },
         "ignored_instruction_files": "None in any fixture.",

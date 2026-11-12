@@ -65,12 +65,18 @@ The scripts use only the Python standard library.
 | `expected.json` | Expected outcome of each case as `must`, `should`, and `manual` checks. |
 | `requests.json` | Request template for each case, with placeholders for the skill and output paths. |
 | `run-trials/SKILL.md` | Coordinator procedure for running the cases in the current harness. |
+| `run-trials/claude-code.md` | Launch, settings and capture for isolated Claude Code executors. |
 
 The builder gives each fixture a fixed identity and fixed dates, so the same
 pinned skills, Git version, and platform reproduce every commit SHA. It runs
 Git with an empty configuration directory, so user-wide ignore rules cannot
 drop AGENTS.md or CLAUDE.md from fixture commits. T1 to T3 embed the audit
 skill's hash or the bootstrap contract, so their SHAs change with those skills.
+
+Executors run with a different, generated Git configuration. It carries only a
+copy of the user's excludes file, so instruction files the user ignores appear
+ignored to executors too, and it stays readable inside a sandbox that hides the
+user's home directory. The manifest records it, and the self-test checks it.
 
 Run the trials with the [run-trials skill](run-trials/SKILL.md) in any
 coding-agent harness. Run `make dev` to link it into `.agents/skills/` (Codex)
