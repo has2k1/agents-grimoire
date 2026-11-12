@@ -267,9 +267,10 @@ content from claims about the committed snapshot and record any resulting
 coverage limit. Refuse to record a checkpoint for an observed dirty state as
 though the parent contained it.
 
-Save the message in a temporary file outside the checkout. Record HEAD, the
-index tree, and existing working changes before the write. Keep an unrelated
-staged change staged by using the explicit empty-commit mode:
+Write the message to a file outside the checkout so the report reaches Git
+byte for byte and the working tree stays as recorded. Record HEAD, the index
+tree, and existing working changes for the check afterwards. Create the commit
+with `--only` so an unrelated staged change stays staged:
 
 ```sh
 git commit --allow-empty --only --cleanup=verbatim --file <temporary-message-file>
