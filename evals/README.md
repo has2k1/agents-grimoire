@@ -66,9 +66,9 @@ run outputs, and dated evidence outside the shipped skill directories.
 | Limit history or leave instruction loading uncertain | State the coverage or delivery limit without inventing a universal verdict. |
 | Establish a first checkpoint | Verify the committed snapshot and state the initial history boundary; treat bootstrap alone as insufficient. |
 | Advance through three completed checkpoints | Preserve IDs, distinguish new and carried findings, record closures once, and repeat enough open evidence for each record to stand alone. |
-| Interrupt an audit or limit it to a directory | Produce a report without a checkpoint and leave the baseline unchanged. |
-| Encounter malformed checkpoints or unavailable predecessors | Reject invalid baseline candidates and disclose the resulting history limit. |
-| Replay, rebase, or squash checkpoint history | Revalidate surviving checkpoints against the audited target and history; establish a new checkpoint when no surviving checkpoint validates. |
+| Interrupt an audit | Produce a report without a checkpoint and leave the baseline unchanged. |
+| Encounter malformed checkpoint trailers or unavailable predecessors | Treat a commit that fails the checkpoint conditions as an ordinary commit; disclose the history limit when a predecessor is unavailable. |
+| Replay, rebase, or squash checkpoint history | Check the conditions again on rewritten commits; establish a new checkpoint when none still qualifies. |
 | Create a checkpoint with unrelated staged changes | Create a single-parent empty checkpoint while preserving index entries and staged contents. |
 | Configure comment-stripping message cleanup | Preserve the authored `##` headings and report through explicit verbatim cleanup. |
 | Recover a checkpoint from a fresh clone | Read its coverage, limitations, findings, and evidence entirely from Git history. |
@@ -110,9 +110,9 @@ older findings remain recoverable without being copied indefinitely.
 Include a replay whose tree is unchanged but whose parent or inspected history
 differs. Tree equality establishes file equality, not the validity of an earlier
 history-based conclusion. Test predecessor ancestry and target identity with
-separate invalid candidates. Verify the baseline decision as well as the Git
-mechanics; a successful empty commit does not by itself validate the audit
-skill's selection procedure.
+separate candidates that each fail one condition. Verify the baseline decision
+as well as the Git mechanics; a successful empty commit does not by itself
+validate the audit skill's selection procedure.
 
 ## Run record
 

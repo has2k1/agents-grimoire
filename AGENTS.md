@@ -58,13 +58,14 @@ single-parent Git commit. Use the title
 stable finding IDs across New findings, Carried findings, and Closed findings.
 Repeat unresolved evidence, record closures once, and use `None` for empty
 sections. Keep the record interpretable from Git alone. Record only completed
-repository-wide audits as checkpoints; an interrupted, unfinished, or directory
+audits of the whole repository as checkpoints; an interrupted or unfinished
 audit produces a report without one.
 
 Use the audit skill as the canonical source for checkpoint trailers,
-validation, and write commands. Use the nearest validated checkpoint as the
-baseline: it sets the history boundary, and its New and Carried findings are
-the open findings. Revalidate checkpoints after rewritten history. Exclude
+validation, and write commands. Use the nearest checkpoint as the baseline: it
+sets the history boundary, and its New and Carried findings are the open
+findings. Treat a commit that fails the checkpoint conditions as an ordinary
+commit, and check those conditions again after rewritten history. Exclude
 checkpoint commits from counts of commits that change code and instructions
 together.
 

@@ -16,16 +16,13 @@ a checkpoint when the request authorises that action; use existing authority
 without asking for it again. Run checks without auto-fix or other source-writing
 options, and report execution prerequisites that are unavailable.
 
-## Scope
+## Coverage
 
-Define the audit's scope as the repository or directory being checked. Record
-coverage as the files, claims, history, and checks actually examined. A
-directory name alone does not establish complete coverage. A directory audit
-produces a report but no checkpoint.
+Record coverage as the files, claims, history, and checks actually examined.
 
 1. Record the repository revision and working-tree state. Inventory instruction
    files, relevant ancestor rules, overrides, imports, links, and module maps in
-   the requested scope. Include existing CLAUDE.md systems rather than assuming
+   the repository. Include existing CLAUDE.md systems rather than assuming
    that AGENTS.md is their active entrypoint.
 2. Confirm which files the intended harness discovers and which require explicit
    reads. Check relevant loading paths and size budgets against the available
@@ -42,67 +39,70 @@ For a Git repository, select the baseline before checking intervening changes.
 Without Git history, check the current state and report that historical
 verification is unavailable.
 
-A **completed audit** has finished its declared repository-wide work; it can
-report defects, sampling, and unavailable checks with explicit limits. A clean
-result means no defect was demonstrated within the completed checks. An audit
-that cannot finish its declared repository-wide work, or that covers only a
-directory, produces a report but no checkpoint.
+A **completed audit** has finished its declared checks of the whole
+repository; it can report defects, sampling, and unavailable checks with
+explicit limits. A clean result means no defect was demonstrated within the
+completed checks. An audit that cannot finish produces a report but no
+checkpoint.
 
 A **checkpoint** is an empty, single-parent Git commit whose message stores the
-report of a completed audit and structured trailers. Its sole parent is the
-**audited revision**, the committed snapshot examined by that audit. Local
-changes are separate from that snapshot.
+report of a completed audit and the trailers of the **Checkpoint message**
+template. Its sole parent is the **audited revision**, the committed snapshot
+examined by that audit. Local changes are separate from that snapshot. A commit
+is a checkpoint only when it meets every condition under **Baseline
+selection**; any other commit is an ordinary commit, whatever its message says.
 
-A **baseline** is the nearest validated checkpoint on the target branch. It sets
-the **history boundary**, the revision after which the audit inspects changes up
-to the audited revision. Its New and Carried findings are the complete set of
-open earlier findings. An audit without a checkpoint leaves the baseline
-unchanged.
+A **baseline** is the nearest checkpoint on the target branch's first-parent
+history. It sets the **history boundary**, the revision after which the audit
+inspects changes up to the audited revision. Its New and Carried findings are
+the complete set of open earlier findings. An audit that produces no checkpoint
+leaves the baseline unchanged.
+
 Use the **Report** and **Checkpoint message** sections to finish the deliverable.
 Bootstrap output remains candidate documentation until verified and cannot by
 itself supply a baseline.
 
 ### Baseline selection
 
-Discover candidate checkpoints from the target branch's first-parent history,
-using the `Agents-Audit-Version` trailer rather than the subject. For example:
+Walk the target branch's first-parent history from HEAD. Treat commits with an
+`Agents-Audit-Version` trailer as candidates; identify them by the trailer
+rather than the subject. For example:
 
 ```sh
 git log --first-parent --format='%H' --grep='^Agents-Audit-Version: 1$' HEAD
 git show -s --format=%B <candidate> | git interpret-trailers --parse
 ```
 
-These commands find candidates; they do not validate them. Check each message
-and its Git objects before selecting the nearest valid checkpoint:
+These commands find candidates. A candidate is a checkpoint only when its
+message and Git objects meet all of these conditions:
 
-- Require one non-conflicting value for every trailer in the message template,
-  a supported version, and an identifiable skill revision or content hash.
-- Require exactly one parent. Require that parent's full SHA to equal
-  `Agents-Audit-Commit`, and require both the parent and checkpoint trees to
-  equal `Agents-Audit-Tree`. Tree equality alone cannot detect replay onto a
+- Every trailer in the message template has one non-conflicting value, the
+  version is supported, and the skill revision or content hash is identifiable.
+- The commit has exactly one parent. That parent's full SHA equals
+  `Agents-Audit-Commit`, and both the parent and commit trees equal
+  `Agents-Audit-Tree`. Tree equality alone cannot detect replay onto a
   different history that happens to produce the same files.
-- Require the checkpoint to lie on the target's first-parent history.
-- Require `Agents-Audit-Previous` to name the previous checkpoint on the audited
-  parent's first-parent history, or `none` for an explicitly established
-  initial history boundary. Validate predecessor records too.
-- Require every report section of the message template, with declared
-  coverage. Unless `Agents-Audit-Previous` is `none`, require each ID under New
-  findings or Carried findings in the checkpoint it names to appear under
-  Carried findings or Closed findings. Reject malformed, conflicting, replayed,
-  or otherwise invalidated records as baselines.
+- The commit lies on the target's first-parent history.
+- `Agents-Audit-Previous` names the nearest earlier checkpoint on the audited
+  revision's first-parent history, or `none` for an explicitly established
+  initial history boundary. The named commit must itself be a checkpoint.
+- The message contains every report section of the template, with declared
+  coverage. Unless `Agents-Audit-Previous` is `none`, each ID under New
+  findings or Carried findings in the named checkpoint appears under Carried
+  findings or Closed findings.
 
-Walk past an invalid candidate to an earlier valid one and report the rejection.
-A rejected or missing baseline limits historical claims; it does not erase
-known finding evidence, so recheck findings recorded in a rejected candidate.
-When a predecessor is unavailable or shallow history prevents validation, state
-the gap. Do not silently replace a known history boundary with the last few
-commits or declare the work a first audit. If no reliable baseline can be
-recovered, check the current state within explicit limits and leave historical
-coverage unverified. For a genuine first audit with no earlier baseline, verify the
-current state and state an explicit initial history boundary.
+Select the nearest candidate that meets these conditions as the baseline.
+When a predecessor is unavailable or shallow history prevents these checks,
+state the gap. Do not silently replace a known history boundary with the last
+few commits or declare the work a first audit. If no baseline can be
+established, check the current state within explicit limits and leave
+historical coverage unverified. For a genuine first audit with no earlier
+checkpoint, verify the current state and state an explicit initial history
+boundary.
 
-Revalidate surviving records after rebase, cherry-pick, or squash. Establish
-durable checkpoints after integration when feature history is squashed.
+Rebase, cherry-pick, and squash give commits new parents, so check the
+conditions again after rewriting history. Establish durable checkpoints after
+integration when feature history is squashed.
 
 ## Checks
 
@@ -114,7 +114,8 @@ durable checkpoints after integration when feature history is squashed.
   incomplete check; a valid test command finding a regression is not stale.
 - Resolve named references, paths, imports, and module-map entries. Inspect
   renames, shared ownership, and applicable ancestor rules before calling an
-  instruction missing. Judge severity by the likely consequence, not a missing
+  instruction missing. Demonstrate the defect, then judge its severity by the
+  likely consequence for an agent following the instruction, not by a missing
   symbol alone.
 - Verify important invariants against the implementation and tests. Distinguish
   descriptions from policy: intentional code can still violate an established
@@ -150,9 +151,10 @@ accepted choices whose consequence should constrain future changes and whose
 reason is not apparent from code. Use a recorded explanation or confirmation by
 the decision-maker; a diff proves a change, not its intent. Draft the rule,
 reason, and conditions for reconsideration only when evidenced and still useful.
-Keep longer trade-offs in an existing decision record and link to it from
-concise local guidance. During bootstrap, continue to use only current sources;
-do not mine Git history for reasons or invent rationale.
+Leave a rejected alternative worth mentioning to a comment in the source it
+affects, where an agent changing that code will find it. During bootstrap,
+continue to use only current sources; do not mine Git history for reasons or
+invent rationale.
 
 For significant diagnosed bugs, check whether the lesson still prevents a
 costly or repeated mistake. Propose a concise entry recording the symptom,
@@ -195,17 +197,16 @@ Separate findings into these sections; write `None` when one is empty:
   consequences, and required corrections.
 - Carry every unresolved finding from the baseline with its ID, source
   checkpoint, and a complete account of its evidence, consequence, and required
-  correction.
-  Move unresolved new findings here at the next checkpoint; retain findings
-  whose resolution cannot be verified.
+  correction. Move unresolved new findings here at the next checkpoint; retain
+  findings whose resolution cannot be verified.
 - Close findings with the verified resolution or supersession and supporting
   evidence. Record each closure once, then omit it from later reports. Keep its
   history in the earlier checkpoint rather than growing an archive in each report.
 
 Allocate IDs without reusing retired ones; for example, use an audit-specific
 UTC timestamp plus a counter and retain that ID thereafter. State in the report
-whether the audit completed; an interrupted, unfinished, or directory audit
-ends with the report. Claim a clean result only within the checks that
+whether the audit completed; an interrupted or unfinished audit ends with the
+report. Claim a clean result only within the checks that
 demonstrate it.
 
 ## Checkpoint message
@@ -251,7 +252,7 @@ Agents-Audit-Version: 1
 Agents-Audit-Commit: <full audited parent commit SHA>
 Agents-Audit-Tree: <audited tree SHA>
 Agents-Audit-Skill-Revision: <skill revision or content hash>
-Agents-Audit-Previous: <previous checkpoint SHA or none>
+Agents-Audit-Previous: <baseline checkpoint SHA or none>
 ```
 
 ## Checkpoint creation

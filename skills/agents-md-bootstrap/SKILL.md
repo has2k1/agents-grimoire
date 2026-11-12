@@ -132,8 +132,9 @@ applicable policy and resolving contradictions; avoid duplicate contracts.
 > Record an accepted architectural decision when future changes need a
 > non-obvious constraint or its reason. State the rule, its evidenced reason,
 > and conditions for reconsideration. Use a recorded explanation or the
-> decision-maker's confirmation; keep substantial alternatives in a linked
-> decision record. Revise or remove the instruction when its premises change.
+> decision-maker's confirmation. Record a rejected alternative worth mentioning
+> as a comment in the source it affects. Revise or remove the instruction when
+> its premises change.
 >
 > Retain a warning about a failure (a trap entry) only when a concrete failure
 > or regression path still warrants guidance on diagnosis or prevention. Record
@@ -157,7 +158,7 @@ produce no substantive diff.
 Treat the result as candidate documentation. Hand off to
 [agents-md-audit](../agents-md-audit/SKILL.md) to verify it, account for findings
 from the latest checkpoint, and establish a valid audit baseline. A checkpoint
-stores the report of a completed repository-wide audit in an empty Git commit;
-a validated checkpoint can supply the history boundary for a later audit.
+stores the report of a completed repository audit in an empty Git commit;
+a checkpoint can supply the history boundary for a later audit.
 Bootstrap alone establishes no verified checkpoint. Preserve the repository's
 existing commit and publication workflow.

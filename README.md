@@ -97,18 +97,18 @@ checks, new findings, carried findings, and closed findings, followed by
 structured trailers. It remains interpretable from repository history alone.
 
 Only a completed audit becomes a checkpoint. A completed audit has finished its
-declared repository-wide work and stated its verification limits. It can still
-report known defects or unavailable checks. A clean result means no defect was
-demonstrated within the checks performed. An unfinished, interrupted, or
-directory audit produces a report but no checkpoint, so it leaves the baseline
+declared checks of the whole repository and stated its verification limits. It
+can still report known defects or unavailable checks. A clean result means no
+defect was demonstrated within the checks performed. An unfinished or
+interrupted audit produces a report but no checkpoint, so it leaves the baseline
 unchanged.
 
-Use the nearest validated checkpoint on the branch as the baseline for a later
-audit. It sets the history boundary, the revision after which the audit
-inspects changes, and its new and carried findings are the complete set of open
-findings. Select the baseline using the audit skill's trailer and first-parent
-history checks. Revalidate after history rewriting; create durable checkpoints
-after integration when feature branches are squashed.
+Use the nearest checkpoint on the branch as the baseline for a later audit. It
+sets the history boundary, the revision after which the audit inspects changes,
+and its new and carried findings are the complete set of open findings. The
+audit skill defines the conditions a commit must meet to be a checkpoint.
+Rewriting history can break them, so check them again afterwards; create durable
+checkpoints after integration when feature branches are squashed.
 
 Preserve finding IDs and repeat unresolved findings with their evidence. Record
 each closure once and omit it from later reports.
