@@ -55,12 +55,15 @@ verifies.
 
 Verify each new or revised factual rule before handoff. Check the relevant
 entrypoints, input forms, branches, and existing tests for counterexamples.
-State which APIs or modes the rule applies to. Behaviour in one helper does
-not establish an invariant for every caller. Treat docstrings, comments, and
-names as claims to check against the code, not as evidence of behaviour. Run
-each example an instruction cites and check its result against every rule in
-that instruction. Complete these checks for the selected scope before treating
-the run as finished.
+Prefer describing what the code does over a derived condition. When a rule
+states when behaviour holds (only when, unless, except), test inputs on both
+sides of that condition, including inputs the condition excludes. State which
+APIs or modes the rule applies to. Behaviour in one helper does not establish
+an invariant for every caller. Treat docstrings, comments, and names as claims
+to check against the code, not as evidence of behaviour. Run each example an
+instruction cites and check its result against every rule in that
+instruction. Complete these checks for the selected scope before treating the
+run as finished.
 
 Write a requirement for future changes, such as files to update together, only
 when existing instructions or an authorised decision state it. Report a

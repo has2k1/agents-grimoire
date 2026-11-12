@@ -125,7 +125,8 @@ integration when feature history is squashed.
   likely consequence for an agent following the instruction, not by a missing
   symbol alone.
 - Verify important invariants against the implementation and tests, treating
-  docstrings and comments as claims rather than evidence. Distinguish
+  docstrings and comments as claims rather than evidence. Check a conditional
+  claim with inputs on both sides of its condition. Distinguish
   descriptions from policy: intentional code can still violate an established
   boundary. Resolve conflicts using the task's authority and recorded decisions;
   do not rewrite policy merely to match code that violates it.

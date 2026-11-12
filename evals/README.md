@@ -94,7 +94,7 @@ self-test them without executors.
 | Extend an existing root | Preserve established policy and unrelated sections while adding the requested coverage. |
 | Repeat bootstrap on unchanged code | Produce no substantive changes or duplicate maintenance contract. |
 | Infer a rule from a shared helper | Check the relevant entrypoints and input forms; state which forms the rule covers when their behaviour differs. |
-| Bootstrap code whose docstring overstates its behaviour | Describe what the code produces, check each cited example against the stated rules, and report the docstring discrepancy. |
+| Bootstrap code whose docstring overstates its behaviour | Describe what the code produces, test any stated condition on both sides, check each cited example against the stated rules, and report the docstring discrepancy. |
 | Bootstrap a project without a stated co-change rule | Offer any new requirement as a handoff suggestion rather than writing it as an instruction. |
 | Optimise private code while preserving a precise invariant | Leave accurate instructions unchanged and report no maintenance defect solely from absent documentation edits. |
 | Remove a command or rename a referenced file or API | Identify the affected claim and support its correction with repository evidence. |
