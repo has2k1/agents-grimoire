@@ -104,11 +104,11 @@ directory audit produces a report but no checkpoint, so it leaves the baseline
 unchanged.
 
 Use the nearest validated checkpoint on the branch as the baseline for a later
-audit. It sets the start of the history window, and its new and carried
-findings are the complete set of open findings. Select the baseline using the
-audit skill's trailer and first-parent history checks. Revalidate after history
-rewriting; create durable checkpoints after integration when feature branches
-are squashed.
+audit. It sets the history boundary, the revision after which the audit
+inspects changes, and its new and carried findings are the complete set of open
+findings. Select the baseline using the audit skill's trailer and first-parent
+history checks. Revalidate after history rewriting; create durable checkpoints
+after integration when feature branches are squashed.
 
 Preserve finding IDs and repeat unresolved findings with their evidence. Record
 each closure once and omit it from later reports.

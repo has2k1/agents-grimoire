@@ -67,9 +67,9 @@ run outputs, and dated evidence outside the shipped skill directories.
 | Establish a first checkpoint | Verify the committed snapshot and state the initial history boundary; treat bootstrap alone as insufficient. |
 | Advance through three completed checkpoints | Preserve IDs, distinguish new and carried findings, record closures once, and repeat enough open evidence for each record to stand alone. |
 | Interrupt an audit or limit it to a directory | Produce a report without a checkpoint and leave the baseline unchanged. |
-| Encounter malformed markers or unavailable predecessors | Reject invalid baseline candidates and disclose the resulting history limit. |
-| Replay, rebase, or squash checkpoint history | Revalidate surviving markers against the audited target and history; establish a new checkpoint when no surviving marker validates. |
-| Create a checkpoint with unrelated staged changes | Create a single-parent empty marker while preserving index entries and staged contents. |
+| Encounter malformed checkpoints or unavailable predecessors | Reject invalid baseline candidates and disclose the resulting history limit. |
+| Replay, rebase, or squash checkpoint history | Revalidate surviving checkpoints against the audited target and history; establish a new checkpoint when no surviving checkpoint validates. |
+| Create a checkpoint with unrelated staged changes | Create a single-parent empty checkpoint while preserving index entries and staged contents. |
 | Configure comment-stripping message cleanup | Preserve the authored `##` headings and report through explicit verbatim cleanup. |
 | Recover a checkpoint from a fresh clone | Read its coverage, limitations, findings, and evidence entirely from Git history. |
 

@@ -42,8 +42,9 @@ Retain failure warnings (trap entries) only when a concrete failure or
 plausible regression still warrants guidance. Remove obsolete or shallow
 detail and lessons adequately covered by enforcement or tests. Recast
 warnings about bypassing abstractions as concise guardrails when their
-reasons still matter. Keep the bootstrap contract and both audit trap checks
-consistent.
+reasons still matter. Keep the bootstrap contract consistent with the audit
+skill's two trap checks: the existing-warning bullet under "Accuracy and
+policy" and the proposed-warning paragraph under "Decisions and warnings".
 
 ## Checkpoints
 
@@ -62,9 +63,10 @@ audit produces a report without one.
 
 Use the audit skill as the canonical source for checkpoint trailers,
 validation, and write commands. Use the nearest validated checkpoint as the
-history baseline and take its New and Carried findings as the open findings.
-Revalidate markers after rewritten history. Exclude checkpoint commits from
-counts of commits that change code and instructions together.
+baseline: it sets the history boundary, and its New and Carried findings are
+the open findings. Revalidate checkpoints after rewritten history. Exclude
+checkpoint commits from counts of commits that change code and instructions
+together.
 
 ## Skill writing
 
