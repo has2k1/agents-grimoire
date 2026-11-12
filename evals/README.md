@@ -64,6 +64,7 @@ The scripts use only the Python standard library.
 | `assess.py` | Assessor for the fixtures before any run (`selftest`) and for each finished case. |
 | `expected.json` | Expected outcome of each case as `must`, `should`, and `manual` checks. |
 | `requests.json` | Request template for each case, with placeholders for the skill and output paths. |
+| `run-trials/SKILL.md` | Coordinator procedure for running the cases in the current harness. |
 
 The builder gives each fixture a fixed identity and fixed dates, so the same
 pinned skills, Git version, and platform reproduce every commit SHA. It runs
@@ -71,30 +72,13 @@ Git with an empty configuration directory, so user-wide ignore rules cannot
 drop AGENTS.md or CLAUDE.md from fixture commits. T1 to T3 embed the audit
 skill's hash or the bootstrap contract, so their SHAs change with those skills.
 
-Give each executor only the request text, the fixture, and the pinned skills.
-Keep the run directory outside `evals/` and out of the executor's reach,
-typically in a dated `.agents/docs/` folder or under `/tmp`.
-
-1. Pin the skills, build the fixtures, and check them:
-
-   ```sh
-   TRIAL=/tmp/grimoire-evals
-   RUN=/tmp/grimoire-evals-run
-   mkdir -p "$TRIAL" && cp -R skills "$TRIAL/skills"
-   python3 -I evals/build_fixtures.py --trial-root "$TRIAL" \
-       --skills "$TRIAL/skills" --run-dir "$RUN"
-   python3 -I evals/assess.py --run-dir "$RUN" selftest
-   ```
-
-2. Run a fresh executor in each fixture under `$TRIAL/fixtures/` with that
-   case's `request` from `$RUN/manifest.json`.
-3. Assess each finished case, for example
-   `python3 -I evals/assess.py --run-dir "$RUN" T1`. The assessor writes
-   `assessment-<case>.json` to the run directory.
-4. After assessing T4, build T5 with
-   `python3 -I evals/build_repeat_fixture.py --run-dir "$RUN"`, run its
-   executor, and assess it.
-5. Review every `manual` item and record the outcome in the run record.
+Run the trials with the [run-trials skill](run-trials/SKILL.md) in any
+coding-agent harness. Run `make dev` to link it into `.agents/skills/` (Codex)
+and `.claude/skills/` (Claude Code), then invoke `run-trials` by name;
+elsewhere, ask the agent to use the skill at `evals/run-trials/SKILL.md`. The
+skill builds the fixtures, runs one isolated executor per case, assesses the
+results, and writes the run record. Run `make check` to build the fixtures and
+self-test them without executors.
 
 ## Cases
 

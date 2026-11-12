@@ -1,0 +1,3 @@
+# Codex skill policy: run only on explicit `$run-trials` invocation.
+policy:
+  allow_implicit_invocation: false

@@ -131,9 +131,14 @@ external tracker, a separate checkpoint file, or a mutable latest pointer.
 ## Development
 
 Keep both skills and the repository rules in agreement when changing their
-behaviour. Validate realistic outcomes using the [evaluation protocol](evals/README.md).
-Format checks cannot establish that a prompt preserves policy or detects
-actual drift.
+behaviour. Run `make check` before committing, and validate realistic outcomes
+using the [evaluation protocol](evals/README.md). Format checks cannot establish
+that a prompt preserves policy or detects actual drift.
+
+Run `make dev` once in a checkout to link the maintainer skill `run-trials`
+into `.agents/skills/` (Codex) and `.claude/skills/` (Claude Code). Then invoke
+it by name to run the behavioural trials. The links are ignored by Git, and the
+installer does not ship the skill.
 
 ## Licence
 

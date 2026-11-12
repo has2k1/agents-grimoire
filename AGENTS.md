@@ -90,17 +90,12 @@ conditional detail and link it at its loading condition.
 
 ## Verification
 
-Run `git diff --check` for whitespace and `npx skills add . --list` for local
-skill discovery. After changing the harness, build the fixtures outside the
-package and self-test them:
-
-```sh
-python3 -I evals/build_fixtures.py --trial-root <dir> --skills <pinned-skills> --run-dir <run-dir>
-python3 -I evals/assess.py --run-dir <run-dir> selftest
-```
-
-Use the evaluation protocol for behavioural validation; format checks alone
-cannot prove accurate claims, preservation, or useful findings.
+Run `make check` before committing. It checks whitespace, skill discovery in the
+package files, the harness's lint and types, and a fixture build with its
+self-test. After changing skill behaviour, run the trials with the `run-trials`
+skill (`evals/run-trials/SKILL.md`; `make dev` links it into `.agents/skills/`
+and `.claude/skills/`); format checks alone cannot prove accurate claims,
+preservation, or useful findings.
 
 Run trials in disposable snapshots and record their exact revisions, relevant
 ignored instructions, runner information, outcomes, and verification limits.
