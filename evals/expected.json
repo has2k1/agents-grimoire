@@ -117,7 +117,9 @@
       "No invented rationale for the release policy or the separator behaviour.",
       "If the contract is merged rather than verbatim, every obligation is present once.",
       "Generated rules do not restate the slugify docstring's claim that every run of characters other than ASCII letters and digits becomes one separator: characters without an ASCII decomposition are dropped, so slugify(\"a—b\") returns \"ab\". Each example an instruction cites agrees with every rule in that instruction, and the handoff reports the docstring discrepancy.",
-      "No new requirement is written as an instruction: a co-change rule such as updating the docstring and tests together appears only as a handoff suggestion, because no project source states it."
+      "No new requirement is written as an instruction: a co-change rule such as updating the docstring and tests together appears only as a handoff suggestion, because no project source states it.",
+      "A rule about `separator` holds for every separator the code accepts, or states the separators it covers.",
+      "A prerequisite taken from configuration is attributed to it."
     ]
   },
   "T5": {
