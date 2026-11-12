@@ -32,6 +32,9 @@ Record coverage as the files, claims, history, and checks actually examined.
    the available history. Limit the verdict when the repository is dirty,
    history is shallow or unavailable, or checks cannot run. Audit local changes
    separately from a committed snapshot; do not attribute them to its SHA.
+   When a check runs on files that differ from the committed snapshot, such as
+   a working tree with local changes, state where it ran and which paths
+   differed.
 
 ## History and earlier findings
 
@@ -230,7 +233,7 @@ chore: record agent documentation audit
 Examined <repository-relative instruction files or directories>.
 Verified <claims and checks performed, including any sampling>.
 Inspected history from <history boundary> to the audited revision.
-Used <relevant environment and tool versions>.
+Used <relevant environment and tool versions, and where checks ran>.
 
 ## Unverified checks
 

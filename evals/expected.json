@@ -95,7 +95,8 @@
     "clone_recovers_report": true,
     "manual": [
       "Report states an explicit initial history boundary.",
-      "Report excludes the staged README change and scratch.txt from claims about the committed snapshot."
+      "Report excludes the staged README change and scratch.txt from claims about the committed snapshot.",
+      "If any check ran on files that differ from the committed snapshot, Coverage says where it ran and which paths differed."
     ]
   },
   "T4": {
