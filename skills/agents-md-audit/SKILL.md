@@ -94,7 +94,8 @@ Because each predecessor must itself be a checkpoint, check candidates from the
 oldest forward and reuse each result; every commit is then checked once.
 Select the nearest candidate that meets these conditions as the baseline.
 Treat any other candidate as an ordinary commit in the history window: read no
-findings or closures from its message.
+findings or closures from its message, and leave it out of the report and the
+checkpoint message.
 When a predecessor is unavailable or shallow history prevents these checks,
 state the gap. Do not silently replace a known history boundary with the last
 few commits or declare the work a first audit. If no baseline can be

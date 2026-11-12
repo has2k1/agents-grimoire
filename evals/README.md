@@ -69,7 +69,7 @@ run outputs, and dated evidence outside the shipped skill directories.
 | Establish a first checkpoint | Verify the committed snapshot and state the initial history boundary; treat bootstrap alone as insufficient. |
 | Advance through three completed checkpoints | Preserve IDs, distinguish new and carried findings, record closures once, and repeat enough open evidence for each record to stand alone. |
 | Interrupt an audit | Produce a report without a checkpoint and leave the baseline unchanged. |
-| Encounter malformed checkpoint trailers or unavailable predecessors | Treat a commit that fails the checkpoint conditions as an ordinary commit; disclose the history limit when a predecessor is unavailable. |
+| Encounter malformed checkpoint trailers or unavailable predecessors | Treat a commit that fails the checkpoint conditions as an ordinary commit and leave it out of the report; disclose the history limit when a predecessor is unavailable. |
 | Replay, rebase, or squash checkpoint history | Check the conditions again on rewritten commits; establish a new checkpoint when none still qualifies. |
 | Create a checkpoint with unrelated staged changes | Create a single-parent empty checkpoint while preserving index entries and staged contents. |
 | Configure comment-stripping message cleanup | Preserve the authored `##` headings and report through explicit verbatim cleanup. |
