@@ -18,8 +18,12 @@ target. Leave the source checkouts untouched.
 
 Create separate disposable histories for controlled defects and checkpoint
 mechanics. Label introduced conditions as evaluation fixtures, rather than
-presenting them as incidents from the original project. Keep fixture scripts,
-run outputs, and dated evidence outside the shipped skill directories.
+presenting them as incidents from the original project. Keep the fixture
+scripts in `evals/`, outside the shipped skill directories, and keep run
+outputs and dated evidence outside the package.
+
+When agents-grimoire itself is a trial target, remove `evals/` from the
+snapshot so executors cannot read the expected outcomes.
 
 ## Runs
 
@@ -46,6 +50,51 @@ run outputs, and dated evidence outside the shipped skill directories.
    evidence. Rerun affected cases after a prompt correction; retain successful
    results when neither their inputs nor the relevant rule changed. Record which
    final skill bytes each result exercises and why broader cases were omitted.
+
+## Harness
+
+The harness in this directory runs five controlled cases: three audit
+histories (T1 to T3), an initial bootstrap (T4), and a repeat bootstrap (T5).
+The scripts use only the Python standard library.
+
+| File | Contents |
+| --- | --- |
+| `build_fixtures.py` | Builder for the fixture repositories T1 to T4 and the run manifest, which records each fixture's before-state and executor request. |
+| `build_repeat_fixture.py` | Builder for T5, a commit of the worktree that the T4 executor left. |
+| `assess.py` | Assessor for the fixtures before any run (`selftest`) and for each finished case. |
+| `expected.json` | Expected outcome of each case as `must`, `should`, and `manual` checks. |
+| `requests.json` | Request template for each case, with placeholders for the skill and output paths. |
+
+The builder gives each fixture a fixed identity and fixed dates, so the same
+pinned skills, Git version, and platform reproduce every commit SHA. It runs
+Git with an empty configuration directory, so user-wide ignore rules cannot
+drop AGENTS.md or CLAUDE.md from fixture commits. T1 to T3 embed the audit
+skill's hash or the bootstrap contract, so their SHAs change with those skills.
+
+Give each executor only the request text, the fixture, and the pinned skills.
+Keep the run directory outside `evals/` and out of the executor's reach,
+typically in a dated `.agents/docs/` folder or under `/tmp`.
+
+1. Pin the skills, build the fixtures, and check them:
+
+   ```sh
+   TRIAL=/tmp/grimoire-evals
+   RUN=/tmp/grimoire-evals-run
+   mkdir -p "$TRIAL" && cp -R skills "$TRIAL/skills"
+   python3 -I evals/build_fixtures.py --trial-root "$TRIAL" \
+       --skills "$TRIAL/skills" --run-dir "$RUN"
+   python3 -I evals/assess.py --run-dir "$RUN" selftest
+   ```
+
+2. Run a fresh executor in each fixture under `$TRIAL/fixtures/` with that
+   case's `request` from `$RUN/manifest.json`.
+3. Assess each finished case, for example
+   `python3 -I evals/assess.py --run-dir "$RUN" T1`. The assessor writes
+   `assessment-<case>.json` to the run directory.
+4. After assessing T4, build T5 with
+   `python3 -I evals/build_repeat_fixture.py --run-dir "$RUN"`, run its
+   executor, and assess it.
+5. Review every `manual` item and record the outcome in the run record.
 
 ## Cases
 

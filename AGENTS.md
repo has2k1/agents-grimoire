@@ -12,13 +12,16 @@ explains the package for users.
 - Read `skills/agents-md-audit/SKILL.md` when changing drift checks, rationale,
   finding lifecycle, baseline selection, or checkpoint creation.
 - Read `evals/README.md` when validating prompt behaviour or Git checkpoints.
+  The trial harness and its expected outcomes live in `evals/`.
 
 ## Paired rules
 
 Change both skills when the shared model changes. Update this file and the
-README in the same change when their guidance is affected. Preserve accurate
-instructions; an unrelated code change does not require a documentation edit.
-Independent corrections and audit records are legitimate changes.
+README in the same change when their guidance is affected. Update
+`evals/expected.json` in the same change as any skill behaviour it covers.
+Preserve accurate instructions; an unrelated code change does not require a
+documentation edit. Independent corrections and audit records are legitimate
+changes.
 
 Use current, verifiable project material at bootstrap. Preserve existing
 instructions and recorded explanations. Keep inferred intent and rationale
@@ -88,9 +91,16 @@ conditional detail and link it at its loading condition.
 ## Verification
 
 Run `git diff --check` for whitespace and `npx skills add . --list` for local
-skill discovery. Use the evaluation protocol for behavioural validation;
-format checks alone cannot prove accurate claims, preservation, or useful
-findings.
+skill discovery. After changing the harness, build the fixtures outside the
+package and self-test them:
+
+```sh
+python3 -I evals/build_fixtures.py --trial-root <dir> --skills <pinned-skills> --run-dir <run-dir>
+python3 -I evals/assess.py --run-dir <run-dir> selftest
+```
+
+Use the evaluation protocol for behavioural validation; format checks alone
+cannot prove accurate claims, preservation, or useful findings.
 
 Run trials in disposable snapshots and record their exact revisions, relevant
 ignored instructions, runner information, outcomes, and verification limits.

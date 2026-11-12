@@ -1,0 +1,138 @@
+{
+  "_note": "Expected outcomes, hidden from executors. Commit fields name labels in the run manifest's `commits` for the case; `none` is literal. Trees and the pinned audit skill hash come from the run manifest. Levels: must fails the case; should is reported; manual needs a reviewer.",
+  "T1": {
+    "kind": "read-only audit",
+    "baseline": "C2",
+    "previous": "C2",
+    "commit": "HEAD",
+    "carried": [
+      {
+        "id": "AUD-20261001T090000Z-1",
+        "source_checkpoint": "C1",
+        "subject": "tally/counter.py"
+      }
+    ],
+    "closed": [
+      {
+        "id": "AUD-20261008T090000Z-1",
+        "resolved_in": "c3",
+        "subject": "tests/data/"
+      }
+    ],
+    "absent_everywhere": [
+      "AUD-20261001T090000Z-2"
+    ],
+    "new": {
+      "count": 1,
+      "fresh_id_not_in": [
+        "AUD-20261001T090000Z-1",
+        "AUD-20261001T090000Z-2",
+        "AUD-20261008T090000Z-1"
+      ],
+      "subject_terms_all": [
+        "check.sh"
+      ],
+      "subject_terms_should": [
+        "run-tests.sh"
+      ],
+      "description": "AGENTS.md Commands names scripts/check.sh, renamed to scripts/run-tests.sh in c5."
+    },
+    "repository_unchanged": true,
+    "manual": [
+      "Carried F1 repeats evidence, consequence and correction so the record stands alone.",
+      "Closed F3 cites verified resolution evidence (c3; tests/samples/ exists and is read by tests).",
+      "No other defect is claimed without evidence; c4 (--lower) invalidates no claim."
+    ]
+  },
+  "T2": {
+    "kind": "read-only audit",
+    "baseline": "C1",
+    "previous": "C1",
+    "commit": "HEAD",
+    "not_checkpoint": "X",
+    "not_checkpoint_reason": "Agents-Audit-Commit names a pruned pre-replay commit, not the parent of X.",
+    "not_checkpoint_absent": {
+      "checkpoint-message.txt": "must",
+      "report.md": "should"
+    },
+    "carried": [
+      {
+        "id": "AUD-20261002T100000Z-1",
+        "source_checkpoint": "C1",
+        "subject": "tempconv/formulas.py"
+      }
+    ],
+    "not_closed": [
+      "AUD-20261002T100000Z-1"
+    ],
+    "bogus": "AUD-20261020T100000Z-1",
+    "new_should_be_none": true,
+    "new_must_not_mention": [
+      "tox"
+    ],
+    "repository_unchanged": true,
+    "manual": [
+      "Any new finding is independently demonstrated from the repository."
+    ]
+  },
+  "T3": {
+    "kind": "authorised checkpoint creation",
+    "parent": "HEAD",
+    "previous": "none",
+    "new_commits": 1,
+    "index_entries_unchanged": true,
+    "staged_diff_unchanged": true,
+    "worktree_unchanged": true,
+    "untracked": "scratch.txt",
+    "headings": [
+      "Coverage",
+      "Unverified checks",
+      "New findings",
+      "Carried findings",
+      "Closed findings"
+    ],
+    "new_should_be_none": true,
+    "clone_recovers_report": true,
+    "manual": [
+      "Report states an explicit initial history boundary.",
+      "Report excludes the staged README change and scratch.txt from claims about the committed snapshot."
+    ]
+  },
+  "T4": {
+    "kind": "initial bootstrap",
+    "policy": "Add an entry under `## Unreleased` in `CHANGELOG.md` for every user-visible change, in the same commit as the change.",
+    "claude_md_kept": true,
+    "contract_count": 1,
+    "contract_verbatim_preferred": true,
+    "history_only_rationale_absent": [
+      "Apache",
+      "rewrite rule",
+      "documentation server"
+    ],
+    "non_instruction_files_unchanged": true,
+    "head_unchanged_should": true,
+    "manual": [
+      "Every added claim is verifiable from current files; commands verified or limits stated.",
+      "No invented rationale for the release policy or the separator behaviour.",
+      "If the contract is merged rather than verbatim, every obligation is present once.",
+      "Generated rules do not restate the slugify docstring's claim that every run of characters other than ASCII letters and digits becomes one separator: characters without an ASCII decomposition are dropped, so slugify(\"a—b\") returns \"ab\". Each example an instruction cites agrees with every rule in that instruction, and the handoff reports the docstring discrepancy.",
+      "No new requirement is written as an instruction: a co-change rule such as updating the docstring and tests together appears only as a handoff suggestion, because no project source states it."
+    ]
+  },
+  "T5": {
+    "kind": "repeat bootstrap",
+    "no_diff_preferred": true,
+    "contract_count": 1,
+    "policy": "Add an entry under `## Unreleased` in `CHANGELOG.md` for every user-visible change, in the same commit as the change.",
+    "history_only_rationale_absent": [
+      "Apache",
+      "rewrite rule",
+      "documentation server"
+    ],
+    "manual": [
+      "Any diff is a correction of an inaccurate claim or necessary omission, not a rewrite.",
+      "No rule left or written by this run restates the slugify docstring's overstated separator claim; a restatement inherited from T4 is corrected and the discrepancy reported.",
+      "This run writes no new requirement as an instruction; a requirement it thinks the project needs appears only as a handoff suggestion."
+    ]
+  }
+}

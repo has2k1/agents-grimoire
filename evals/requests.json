@@ -1,0 +1,23 @@
+{
+  "_note": "Executor request templates, given verbatim to each executor. The builder replaces {skill} with the pinned SKILL.md path and {out} with the case's output directory. Keep expected outcomes and hints out of the text.",
+  "T1": {
+    "skill": "agents-md-audit",
+    "text": "Use the agents-md-audit skill at {skill} to audit this repository's agent instructions. Prepare the checkpoint message; do not create it. Write the report to {out}/report.md and the checkpoint message to {out}/checkpoint-message.txt."
+  },
+  "T2": {
+    "skill": "agents-md-audit",
+    "text": "Use the agents-md-audit skill at {skill} to audit this repository's agent instructions. Prepare the checkpoint message; do not create it. Write the report to {out}/report.md and the checkpoint message to {out}/checkpoint-message.txt."
+  },
+  "T3": {
+    "skill": "agents-md-audit",
+    "text": "Use the agents-md-audit skill at {skill} to audit this repository's agent instructions and record the checkpoint. Write the report to {out}/report.md and the checkpoint message to {out}/checkpoint-message.txt."
+  },
+  "T4": {
+    "skill": "agents-md-bootstrap",
+    "text": "Use agents-md-bootstrap at {skill} to set up agent instructions in this repository. Write your handoff report to {out}/report.md."
+  },
+  "T5": {
+    "skill": "agents-md-bootstrap",
+    "text": "Use agents-md-bootstrap at {skill} to set up agent instructions in this repository. Write your handoff report to {out}/report.md."
+  }
+}
