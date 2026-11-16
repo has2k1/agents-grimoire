@@ -1,6 +1,6 @@
 # Claude Code executors
 
-Verified with Claude Code 2.1.322 on macOS 27.2, 2026-11-13.
+Verified with Claude Code 2.1.323 on macOS 27.2, 2026-11-16.
 
 ## Trial root
 
@@ -40,7 +40,9 @@ Write one settings file per case. Bash runs inside the sandbox, which allows
 writes to the working directory (the fixture) and to its own temporary
 directory, `/tmp/claude-<uid>`, which it sets as `TMPDIR`. The Read and Edit
 tools go through permission rules instead, so deny the protected paths in
-both. Permission rules write an absolute path with a leading `//`.
+both. A `Read` rule covers every file-reading tool; Claude Code warns that
+`Glob` and `Grep` rules are never matched. Permission rules write an absolute
+path with a leading `//`.
 
 ```json
 {
@@ -49,8 +51,8 @@ both. Permission rules write an absolute path with a leading `//`.
     "allow": ["Bash"],
     "deny": [
       "Read(/<package>/**)", "Edit(/<package>/**)",
-      "Glob(/<package>/**)", "Grep(/<package>/**)",
-      "Read(/<home>/.claude/**)", "Read(/<coordinator-tmp>/**)"
+      "Read(/<home>/.claude/**)", "Read(/<coordinator-tmp>/**)",
+      "Read(/<sibling-root>/**)"
     ]
   },
   "sandbox": {
@@ -58,7 +60,7 @@ both. Permission rules write an absolute path with a leading `//`.
     "autoAllowBashIfSandboxed": true,
     "allowUnsandboxedCommands": false,
     "filesystem": {
-      "denyRead": ["<package>", "<home>/.claude", "<coordinator-tmp>"],
+      "denyRead": ["<package>", "<home>/.claude", "<coordinator-tmp>", "<sibling-root>"],
       "allowWrite": ["<output_dir>", "<user-temp>"]
     }
   }
@@ -73,6 +75,7 @@ Replace the placeholders with absolute paths:
 | `<home>` | The user's home directory. |
 | `<coordinator-tmp>` | The coordinator's own Claude Code temporary directory, `/private/tmp/claude-$(id -u)/$(pwd \| tr / -)` run from the package root. It holds the coordinator's task output, which executors could otherwise read. |
 | `<user-temp>` | `getconf DARWIN_USER_TEMP_DIR` without its trailing slash. |
+| `<sibling-root>` | Each other trial root in use at the same time, one entry per root. Executors can list `/private/tmp`, so concurrent roots are otherwise readable. Omit the entry when only one trial root exists. |
 
 ## Smoke test
 
@@ -105,3 +108,7 @@ The stream holds one JSON event per line.
   plugin skills. Record the list.
 - Executors share the sandbox temporary directory `/tmp/claude-<uid>` with
   each other. Record this as an isolation limit.
+- A Bash command that names a path under a `Read` deny rule can be refused
+  outright ("Permission to use Bash … has been denied") instead of failing
+  inside the sandbox with "Operation not permitted". Count both as denials
+  when recording limits.
