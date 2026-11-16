@@ -1,42 +1,28 @@
 # agents-grimoire
 
-Two skills for maintaining useful agent instructions alongside a repository's
-code. Bootstrap creates or extends verified instructions. Audit checks whether
-existing instructions remain accurate, cover the necessary rules, and still help
-future work.
+Agent instructions can save you from explaining a repository's conventions in
+every coding session. As the code changes, those instructions can become
+incomplete or misleading. agents-grimoire provides two skills to help your
+coding agent write useful instructions and check that they still match your
+project.
 
-## The system
-
-Update affected instructions in the same commit when a change invalidates a
-documented claim or introduces a necessary instruction. Leave accurate
-instructions unchanged. Independent documentation corrections,
-bootstrap work, and audit records are valid changes too.
-
-Preserve established project policy. When implementation conflicts with a
-rule, establish whether the task authorises changing that rule before revising
-it. Record architectural decisions when they constrain future work and their
-reason is supported by a recorded explanation or the decision-maker's
-confirmation. Bootstrap preserves existing explanations without
-reconstructing intent from Git history.
-
-Place guidance at the nearest useful scope. Use a root file for project-wide
-instructions, optional source-root or package files (hubs) for shared rules,
-and local module files (leaves) for distinct module guidance. Keep one
-authoritative explanation and use links or short scoped reminders where needed.
-Create files only when their content justifies them.
-
-Retain warnings while they prevent a concrete failure or plausible regression.
-Remove obsolete or shallow warnings after refactoring; recast a useful warning
-as a guardrail when bypassing an abstraction could reintroduce the problem.
-Keep applicable versions, verification dates, platforms, and measurement
-conditions alongside the claims they limit.
+The skills work with repository instruction files such as `AGENTS.md` and
+`CLAUDE.md`. You can use them to set up instructions for the first time, extend
+existing guidance, or review it after a refactor.
 
 ## The skills
 
-| Skill | Use | Result |
-| --- | --- | --- |
-| [agents-md-bootstrap](skills/agents-md-bootstrap/SKILL.md) | Set up instructions, add guidance, or repeat bootstrap after changes | Merge verified content while preserving policy, explanations, and routing; identify uncertain claims for review. |
-| [agents-md-audit](skills/agents-md-audit/SKILL.md) | Check instructions after changes or periodically | Report evidenced defects, unverified checks, and proposed corrections; prepare a self-contained checkpoint message. |
+[**agents-md-bootstrap**](skills/agents-md-bootstrap/SKILL.md) creates or extends
+instructions using information the agent can verify in your project. It
+preserves existing rules and recorded explanations, adds guidance where it is
+useful, and flags uncertain claims for your review. Running it again should
+leave accurate, sufficient instructions unchanged.
+
+[**agents-md-audit**](skills/agents-md-audit/SKILL.md) checks existing instructions
+against the code and project policy. Its report explains the problems it found,
+the proposed corrections, and anything it could not verify. An audit reads and
+reports by default; it changes files or records a Git checkpoint when you
+authorise those actions.
 
 ## Installation
 
@@ -68,77 +54,97 @@ for source formats, agent selection, and update options.
 
 ## Usage
 
-Start or extend the instruction system:
+After installation, ask your agent to use the skill by name. For an initial
+setup, you could write:
 
 > Use agents-md-bootstrap to set up agent instructions in this repository.
-> Preserve existing rules and create only useful scopes.
 
-Audit it after a refactor, dependency change, or a period of development:
+The same skill can extend instructions for a particular area:
+
+> Use agents-md-bootstrap to add guidance for the parser package, preserving
+> the existing project rules.
+
+After a refactor, dependency change, or a period of development, you could ask:
 
 > Use agents-md-audit to check these instructions against the current code.
 
-The audit reads and reports by default. Request corrections or checkpoint
-creation explicitly when you want those writes; existing authorisation still
-applies.
+The report gives you proposed corrections to review. To have the agent apply
+corrections as part of the audit, include that in your request:
 
-Verify which instruction files your agent actually reads. Discovery depends
-on the harness, launch directory, overrides, configuration, and context limits.
-Use explicit file reads when automatic loading is unverified. Instruction
-files communicate the maintenance expectation; following it still requires
-verification and judgement.
+> Use agents-md-audit to check these instructions and fix the problems you can
+> verify.
 
-## Audit checkpoints
+Your agent's instruction-loading rules still matter. Different tools and launch
+directories can load different files, and context limits may prevent some
+instructions from reaching the agent. The skills check this where possible and
+report what remains unverified. Creating an instruction file alone does not
+guarantee that every session will read it.
 
-A checkpoint stores the authoritative audit report in an empty, single-parent
-Git commit titled:
+## Instruction maintenance
 
-```text
-chore: record agent documentation audit
-```
+The skills aim to keep instructions useful without turning them into a
+catalogue of the code. Project-wide guidance belongs in a root file; shared or
+module-specific guidance can live closer to the code it covers. Small projects
+may need only one file. Links and short reminders help readers find shared
+rules without repeating the full explanation.
 
-Its parent is the audited revision: the committed snapshot the report examined.
-The message contains `##` sections for coverage, unverified checks, new
-findings, carried findings, and closed findings, followed by structured
-trailers. It remains interpretable from repository history alone.
+The generated guidance asks agents to update affected instructions alongside a
+code change when that change makes them inaccurate or creates a need for new
+guidance. Accurate instructions can stay unchanged. Documentation corrections
+and audits can also happen independently of code changes.
 
-Only a completed audit becomes a checkpoint. A completed audit has finished its
-declared checks of the whole repository and stated its verification limits. It
-can still report known defects or unavailable checks. A clean result means no
-defect was demonstrated within the checks performed. An unfinished or
-interrupted audit produces a report but no checkpoint, so it leaves the baseline
-unchanged.
+Existing project policy remains a constraint. If the code disagrees with a
+rule, the skills treat that as a conflict to resolve rather than assuming the
+rule should change. Bootstrap preserves recorded reasons for decisions; it
+does not reconstruct intent from Git history.
 
-Use the nearest checkpoint on the branch as the baseline for a later audit. It
-sets the history boundary, the revision after which the audit inspects changes,
-and its new and carried findings are the complete set of open findings. The
-audit skill defines the conditions a commit must meet to be a checkpoint.
-Rewriting history can break them, so check them again afterwards; create durable
-checkpoints after integration when feature branches are squashed.
+Explanations and warnings earn their place by helping with future work. The
+skills retain relevant constraints, supported reasons for architectural
+decisions, and warnings about failures that could recur. They remove obsolete
+detail and keep version, date, platform, and measurement limits where those
+qualify a claim.
 
-Preserve each finding's ID and the checkpoint that first recorded it, and repeat
-unresolved findings with their evidence. Record each closure once and omit it
-from later reports.
+## Audit history
 
-Request checkpoint creation after auditing a committed snapshot:
+An audit can record its report in an empty Git commit called a **checkpoint**.
+The report lives in the commit message, so it remains available in repository
+history without a separate report file or external tracker. The commit changes
+no files and has the title `chore: record agent documentation audit`.
 
-> Record this audit as an empty Git checkpoint with the complete report in
-> its message.
+To request one, ask your agent to audit a committed snapshot and record the
+result:
 
-Use the [audit skill](skills/agents-md-audit/SKILL.md) for the message format,
-selection rules, and write verification. Checkpoints do not require an
-external tracker, a separate checkpoint file, or a mutable latest pointer.
+> Use agents-md-audit to audit this repository and record the complete report
+> as an empty Git checkpoint.
+
+Later audits use the nearest valid checkpoint on the branch to identify the
+changes to inspect and the findings still open. Unresolved findings retain
+their IDs and evidence; resolved findings are recorded as closed once.
+
+A checkpoint records a completed audit of the whole repository, including its
+verification limits. It can contain defects or checks that were unavailable.
+A clean report means no defect was demonstrated within the checks performed.
+An interrupted audit produces a report without advancing the checkpoint.
+
+Rewriting Git history can invalidate checkpoints. If your workflow squashes
+feature branches, durable checkpoints belong after integration. The
+[audit skill](skills/agents-md-audit/SKILL.md) contains the full report format,
+baseline rules, and checkpoint validation procedure.
 
 ## Development
 
-Keep both skills and the repository rules in agreement when changing their
-behaviour. Run `make check` before committing, and validate realistic outcomes
-using the [evaluation protocol](evals/README.md). Format checks cannot establish
-that a prompt preserves policy or detects actual drift.
+The two skills share a model of instruction maintenance. Changes to that model
+need corresponding updates to both skills and the repository guidance.
 
-Run `make dev` once in a checkout to link the maintainer skill `run-trials`
-into `.agents/skills/` (Codex) and `.claude/skills/` (Claude Code). Then invoke
-it by name to run the behavioural trials. The links are ignored by Git, and the
-installer does not ship the skill.
+Run `make check` before committing. It checks whitespace, skill discovery,
+harness lint and types, and a fixture build with its self-test. Behavioural
+trials check whether the skills preserve policy and find real problems; their
+[evaluation protocol](evals/README.md) explains the process and its limits.
+
+Run `make dev` once in a checkout to make the maintainer skill `run-trials`
+available in Codex and Claude Code. Then invoke it by name to run the trials.
+The command creates Git-ignored links in `.agents/skills/` and
+`.claude/skills/`; the installer does not ship this maintainer skill.
 
 ## Licence
 
