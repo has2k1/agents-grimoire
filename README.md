@@ -27,24 +27,27 @@ authorise those actions.
 ## Installation
 
 Use a Node.js version supported by the [skills CLI](https://github.com/vercel-labs/skills).
-From a checkout of this repository, install both skills for your user account:
+Run this from the project where you want to use the skills:
 
 ```sh
-npx skills add . --global
+npx skills add has2k1/agents-grimoire
 ```
 
-Select the intended agents in the installer. To install into a particular
-project instead, run this from that project and provide the checkout path:
+Select the skills and intended agents in the installer. To install for your
+user account instead, add `--global`:
 
 ```sh
-npx skills add /path/to/agents-grimoire
+npx skills add has2k1/agents-grimoire --global
 ```
 
 Inspect the available skills without installing them:
 
 ```sh
-npx skills add /path/to/agents-grimoire --list
+npx skills add has2k1/agents-grimoire --list
 ```
+
+To install from a local checkout, use its path in place of
+`has2k1/agents-grimoire`.
 
 After updating a local checkout, rerun the installation command to refresh its
 installed copies. For supported remote sources, use the CLI's `check` and
